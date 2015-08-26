@@ -28,6 +28,8 @@ STRATEGY
 (Part 2)
 4. find the 25 most frequent words in secondary memory (file)
 *)
+
+// PART 1
 let stopWords = 
     File.ReadAllText(__SOURCE_DIRECTORY__ + "../stop_words.txt").Split(',')
     |> Set.ofArray
@@ -42,7 +44,7 @@ let next  = input.ReadLine
 let (|IsAlnum|_|) c = if System.Char.IsLetterOrDigit c then Some () else None
 let (|Int|) input = System.Int32.Parse input
 
-// very imperative, but the goal is to work with min amount of memory
+// very imperative, but the goal is to work with limited amount of memory
 let findWords (line : string) =
     seq {
         let mutable startIdx, len = -1, 0
@@ -60,13 +62,13 @@ let findWords (line : string) =
     |> Seq.filter (fun x -> x.Length >= 2 && stopWords.Contains x |> not)
 
 let write (stream : Stream) word count = 
-    use writer = new StreamWriter(stream, System.Text.Encoding.ASCII, 1024, true)
+    use writer = new StreamWriter(stream, System.Text.Encoding.ASCII, 128, true)
     writer.WriteLine(sprintf "%s,%d" word count)
     writer.Flush()
 
 let incrFreq (word : string) =
     wordFreqs.Seek(0L, SeekOrigin.Begin) |> ignore
-    use reader = new StreamReader(wordFreqs, System.Text.Encoding.ASCII, false, 1024, true)
+    use reader = new StreamReader(wordFreqs, System.Text.Encoding.ASCII, false, 128, true)
 
     let rec loop : string -> bool = function
         | null -> false // end of file, word not found
@@ -89,3 +91,27 @@ let rec proc (next : unit -> string) =
         proc next
 
 proc next
+
+// PART 2
+wordFreqs.Seek(0L, SeekOrigin.Begin)
+let reader = new StreamReader(wordFreqs)
+let top25 = 
+    // make the sorted list 1 bigger to prevent resizing
+    let list = new System.Collections.Generic.SortedList<string, int>(25 + 1)
+    let rec loop : string -> unit = function
+        | null -> () // end of file
+        | line -> 
+            let [| word; (Int count) |] = line.Split(',')
+            if list.Count < 25 then list.Add(word, count)
+            else // swap if greater than the min
+                let min = list |> Seq.minBy (fun kvp -> kvp.Value)
+                if min.Value < count then
+                    list.Remove(min.Key) |> ignore
+                    list.Add(word, count)
+                    
+            loop <| reader.ReadLine()
+    loop <| reader.ReadLine()    
+
+    list |> Seq.map (fun kvp -> kvp.Key, kvp.Value) |> Seq.toArray
+
+top25 |> Array.iter (fun (word, count) -> printfn "%s - %d" word count)
