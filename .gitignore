@@ -50,6 +50,7 @@ build/
 *.pidb
 *.log
 *.scc
+word_freqs.txt
 
 # Visual C++ cache files
 ipch/
