@@ -1,6 +1,6 @@
 open System.IO
 
-let ``pride and prejudice`` = __SOURCE_DIRECTORY__ + "../pride_and_prejudice.txt"
+let ``pride and prejudice`` = __SOURCE_DIRECTORY__ + "../pride-and-prejudice.txt"
 let test = __SOURCE_DIRECTORY__ + "../test.txt"
 
 (* 
@@ -38,8 +38,8 @@ let wordFreqs = File.Open(__SOURCE_DIRECTORY__ + "../word_freqs.txt",
                           FileMode.Create, 
                           FileAccess.ReadWrite)
 
-//let input = new StreamReader(``pride and prejudice``)
-let input = new StreamReader(test)
+let input = new StreamReader(``pride and prejudice``)
+//let input = new StreamReader(test)
 let next  = input.ReadLine
 let (|IsAlnum|_|) c = if System.Char.IsLetterOrDigit c then Some () else None
 let (|Int|) input = System.Int32.Parse input
@@ -59,14 +59,18 @@ let findWords (line : string) =
 
         if len > 0 then yield line.Substring(startIdx, len)
     }
-    |> Seq.filter (fun x -> x.Length >= 2 && stopWords.Contains x |> not)
+    |> Seq.map (fun x -> x.ToLower())
+    |> Seq.filter (fun x -> x.Length >= 2 && stopWords.Contains x |> not)    
 
 let write (stream : Stream) word count = 
-    use writer = new StreamWriter(stream, System.Text.Encoding.ASCII, 128, true)
-    writer.WriteLine(sprintf "%s,%d" word count)
-    writer.Flush()
+    let content = sprintf "%s,%6d\n" word count
+    let bytes = System.Text.Encoding.ASCII.GetBytes(content)
+    stream.Write(bytes, 0, bytes.Length)
+    stream.Flush()
 
 let incrFreq (word : string) =
+    // since the reader reads 128 chars at a time, so use this to track where we are
+    let mutable readPosition = 0L
     wordFreqs.Seek(0L, SeekOrigin.Begin) |> ignore
     use reader = new StreamReader(wordFreqs, System.Text.Encoding.ASCII, false, 128, true)
 
@@ -74,11 +78,14 @@ let incrFreq (word : string) =
         | null -> false // end of file, word not found
         | line -> 
             let [| word'; (Int count) |] = line.Split(',')
-            if word' = word then 
-                wordFreqs.Seek(-int64 line.Length, SeekOrigin.Current) |> ignore
+            let lineLen = int64 line.Length + 1L // +1 for newline
+            readPosition <- readPosition + lineLen
+            if word' = word then
+                wordFreqs.Seek(readPosition - lineLen, SeekOrigin.Begin) |> ignore
                 write wordFreqs word' (count + 1)
                 true
-            else loop <| reader.ReadLine()
+            else
+                loop <| reader.ReadLine()
 
     let found = loop <| reader.ReadLine()
     if not found then write wordFreqs word 1
@@ -112,6 +119,9 @@ let top25 =
             loop <| reader.ReadLine()
     loop <| reader.ReadLine()    
 
-    list |> Seq.map (fun kvp -> kvp.Key, kvp.Value) |> Seq.toArray
+    list 
+    |> Seq.sortByDescending (fun kvp -> kvp.Value)
+    |> Seq.map (fun kvp -> kvp.Key, kvp.Value) 
+    |> Seq.toArray
 
 top25 |> Array.iter (fun (word, count) -> printfn "%s - %d" word count)
