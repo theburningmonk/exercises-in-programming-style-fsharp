@@ -1,5 +1,5 @@
 open System.IO
-
+#time
 let ``pride and prejudice`` = __SOURCE_DIRECTORY__ + "../pride-and-prejudice.txt"
 let test = __SOURCE_DIRECTORY__ + "../test.txt"
 
@@ -102,26 +102,23 @@ proc next
 // PART 2
 wordFreqs.Seek(0L, SeekOrigin.Begin)
 let reader = new StreamReader(wordFreqs)
-let top25 = 
-    // make the sorted list 1 bigger to prevent resizing
-    let list = new System.Collections.Generic.SortedList<string, int>(25 + 1)
-    let rec loop : string -> unit = function
-        | null -> () // end of file
-        | line -> 
-            let [| word; (Int count) |] = line.Split(',')
-            if list.Count < 25 then list.Add(word, count)
-            else // swap if greater than the min
-                let min = list |> Seq.minBy (fun kvp -> kvp.Value)
-                if min.Value < count then
-                    list.Remove(min.Key) |> ignore
-                    list.Add(word, count)
+
+// make the sorted list 1 bigger to prevent resizing
+let list = new System.Collections.Generic.SortedList<string, int>(25 + 1)
+let rec loop : string -> unit = function
+    | null -> () // end of file
+    | line -> 
+        let [| word; (Int count) |] = line.Split(',')
+        if list.Count < 25 then list.Add(word, count)
+        else // swap if greater than the min
+            let min = list |> Seq.minBy (fun kvp -> kvp.Value)
+            if min.Value < count then
+                list.Remove(min.Key) |> ignore
+                list.Add(word, count)
                     
-            loop <| reader.ReadLine()
-    loop <| reader.ReadLine()    
+        loop <| reader.ReadLine()
+loop <| reader.ReadLine()    
 
-    list 
-    |> Seq.sortByDescending (fun kvp -> kvp.Value)
-    |> Seq.map (fun kvp -> kvp.Key, kvp.Value) 
-    |> Seq.toArray
-
-top25 |> Array.iter (fun (word, count) -> printfn "%s - %d" word count)
+list 
+|> Seq.sortByDescending (fun kvp -> kvp.Value)
+|> Seq.iter (fun (KeyValue(word, count)) -> printfn "%s - %d" word count)
