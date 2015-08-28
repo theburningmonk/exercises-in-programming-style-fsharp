@@ -85,13 +85,12 @@ let findWords (line : string) =
             yield line.Substring(data.[2] :?> int, data.[3] :?> int)
     }
     |> Seq.map (fun x -> x.ToLower())
-    |> Seq.filter (fun x -> x.Length >= 2 && stopWords.Contains x |> not)
+    |> Seq.filter (fun x -> 
+        x.Length >= 2 && 
+        (data.[0] :?> Set<string>).Contains x |> not)
 
 let write (stream : Stream) word count =
     data.[5] <- sprintf "%s,%6d\n" word count :> obj
-
-    printfn "writing %s %d" word count
-
     stream.Write(Encoding.ASCII.GetBytes(data.[5] :?> string), 0, (data.[5] :?> string).Length)
     stream.Flush()
 
