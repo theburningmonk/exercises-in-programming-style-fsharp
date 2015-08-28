@@ -47,8 +47,9 @@ STRATEGY
 let data = Array.zeroCreate<obj> 9
 
 // PART 1
-let stopWords = File.ReadAllText(__SOURCE_DIRECTORY__ + "../stop_words.txt")
-data.[0] <- stopWords.Split(',') |> Set.ofArray :> obj
+data.[0] <- (File.ReadAllText(__SOURCE_DIRECTORY__ + "../stop_words.txt")
+                 .Split(',') 
+             |> Set.ofArray) :> obj
 
 let wordFreqs = File.Open(__SOURCE_DIRECTORY__ + "../word_freqs.txt", 
                           FileMode.Create, 
