@@ -1,4 +1,5 @@
 ﻿open System
+open System.Collections.Generic
 open System.IO
 open System.Text.RegularExpressions
 
@@ -69,8 +70,8 @@ let replaceNonAlphanumeric () =
     unaryOp regex       // push new Regex to head of stack
     ternaryOp replace   // consume the Regex, replacement and input string
     
-/// Takes a string on the stack, scan for words, and place the individual words
-/// on the stack
+/// Takes a string on the stack, scan for words, and place the individual 
+/// words on the stack
 let scan () = 
     split ' '
     unaryOp2 (fun (arr : string[]) -> 
@@ -88,7 +89,9 @@ let removeStopWords () =
     while len() > 0 do
         load<Set<string>> "stop_words"
         binOp (fun (stopWords : Set<string>) word -> 
-            if stopWords.Contains word then None else Some word)
+            if stopWords.Contains word |> not && word.Length >= 2
+            then Some word
+            else None)
 
         load<string list> "words"
         binOp2 (fun (words : string list) word ->
@@ -99,11 +102,35 @@ let removeStopWords () =
     load<string list> "words"
     unaryOp2 (fun (words : string list) -> words |> List.iter push)
 
+let frequencies () =
+    store "word_freqs" <| new Dictionary<string, int>()
 
+    while len() > 0 do
+        load "word_freqs"
+        binOp (fun (wordFreqs : Dictionary<string, int>) word ->
+            if wordFreqs.ContainsKey word
+            then word, wordFreqs.[word] + 1
+            else word, 1)
 
+        load "word_freqs"
+        binOp (fun (wordFreqs : Dictionary<string, int>) (word, newCount) -> 
+            wordFreqs.[word] <- newCount
+            wordFreqs)
 
-push test
-readFile()
-replaceNonAlphanumeric()
-scan()
-removeStopWords()
+        unaryOp2 (store "word_freqs")
+
+let sort () =
+    load "word_freqs"
+    unaryOp2 (fun (wordFreqs : Dictionary<string, int>) ->
+        let len = min wordFreqs.Count 25
+        wordFreqs 
+        |> Seq.sortByDescending (fun kvp -> kvp.Value)
+        |> Seq.take len
+        |> Seq.rev
+        |> Seq.iter (fun kvp -> push (kvp.Key, kvp.Value)))
+
+push ``pride and prejudice``
+readFile(); replaceNonAlphanumeric(); scan(); removeStopWords(); frequencies(); sort()
+
+while len() > 0 do
+    unaryOp2 (fun (word : string, count : int) -> printfn "%s - %d" word count)
