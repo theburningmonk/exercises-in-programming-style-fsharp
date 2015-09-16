@@ -47,6 +47,7 @@
   <ItemGroup>
     <None Include="Style01.fsx" />
     <None Include="Style02.fsx" />
+    <None Include="Style03.fsx" />
     <None Include="paket.references" />
   </ItemGroup>
   <PropertyGroup>
