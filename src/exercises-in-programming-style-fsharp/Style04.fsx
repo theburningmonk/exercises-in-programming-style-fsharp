@@ -22,12 +22,14 @@ let filterCharsAndNormalize () =
 
 let scan () = 
     let data = new String(data)
-    words <- data.Split([|' '|], StringSplitOptions.RemoveEmptyEntries)
+    words <- data.Split(
+                [|' '|], 
+                StringSplitOptions.RemoveEmptyEntries)
 
+let stopWordsPath = __SOURCE_DIRECTORY__ + "../stop_words.txt"
 let removeStopWords () = 
     let stopWords = 
-        File.ReadAllText(__SOURCE_DIRECTORY__ + "../stop_words.txt")
-            .Split(',')
+        File.ReadAllText(stopWordsPath).Split(',')
         |> Array.append ([| 'a'..'z' |] |> Array.map string)
         |> Set.ofArray
     
