@@ -41,7 +41,8 @@ let removeStopWords (words, cont) =
         (File.ReadAllText ``stop words``).Split(',')
         |> Array.append ([| 'a'..'z' |] |> Array.map string)
         |> Set.ofArray
-    let words = words |> Array.filter (not << stopWords.Contains)
+    let words = 
+        words |> Array.filter (not << stopWords.Contains)
     cont(words, sort)
 
 let normalize (input : string, cont) =
