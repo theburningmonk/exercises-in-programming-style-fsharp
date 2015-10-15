@@ -4,8 +4,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>fa3b919c-c792-4af2-a62a-3bd8a8d8d7a3</ProjectGuid>
+    <ProjectGuid>{FA3B919C-C792-4AF2-A62A-3BD8A8D8D7A3}</ProjectGuid>
     <OutputType>Library</OutputType>
     <RootNamespace>exercises-in-programming-style-fsharp</RootNamespace>
     <AssemblyName>exercises-in-programming-style-fsharp</AssemblyName>
@@ -16,10 +15,9 @@
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <Tailcalls>false</Tailcalls>
-    <OutputPath>.\bin\Debug</OutputPath>
+    <OutputPath>bin\Debug</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <WarningLevel>3</WarningLevel>
     <DocumentationFile>.\bin\Debug\exercises-in-programming-style-fsharp.xml</DocumentationFile>
@@ -29,20 +27,19 @@
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <Tailcalls>true</Tailcalls>
-    <OutputPath>.\bin\Release</OutputPath>
+    <OutputPath>bin\Release</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <WarningLevel>3</WarningLevel>
     <DocumentationFile>.\bin\Release\exercises-in-programming-style-fsharp.xml</DocumentationFile>
     <OtherFlags>--warnon:1182</OtherFlags>
+    <DebugSymbols>true</DebugSymbols>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="mscorlib" />
-    <Reference Include="FSharp.Core, Version=$(TargetFSharpCoreVersion), Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-      <Private>False</Private>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Numerics" />
+    <Reference Include="FSharp.Core" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Style01.fsx" />
@@ -55,6 +52,8 @@
     <None Include="Style07.fsx" />
     <None Include="Style08.fsx" />
     <None Include="Style09.fsx" />
+    <None Include="Style10.fsx" />
+    <None Include="Style11.fsx" />
     <None Include="paket.references" />
   </ItemGroup>
   <PropertyGroup>
