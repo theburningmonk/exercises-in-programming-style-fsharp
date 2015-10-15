@@ -15,7 +15,7 @@ type DataStorageManager (filepath) =
     let data  = regex.Replace(File.ReadAllText(filepath), " ").ToLower()
 
     member __.Words = data.Split()
-
+    
 type StopWordsManager () =
     let stopWords = 
         File.ReadAllText(``stop words``)

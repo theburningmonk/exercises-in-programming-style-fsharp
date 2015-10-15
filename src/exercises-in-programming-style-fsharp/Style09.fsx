@@ -60,7 +60,7 @@ readFile ``p & p``
 [<Sealed>]
 type TheOneBuilder () =
     member b.Bind (p, cont) = cont p
-    member b.Return x = x    
+    member b.Return x = x
 
 let theOne = TheOneBuilder()
 
