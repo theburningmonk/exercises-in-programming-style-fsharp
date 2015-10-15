@@ -36,7 +36,7 @@ type WordFrequencyManager () =
     member __.Sorted () =
         wordFreqs
         |> Seq.map (fun (KeyValue(word, n)) -> word, n)
-        |> Seq.sortBy (fun (word, n) -> -n)
+        |> Seq.sortByDescending snd
 
 type WordFrequencyController (filePath) =
     let dataStorageManager = DataStorageManager(filePath)
