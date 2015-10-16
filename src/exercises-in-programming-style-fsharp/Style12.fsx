@@ -14,7 +14,10 @@ type Map = Dictionary<string, obj>
 
 let extractWords (obj : Map) path =
     let regex = Regex("[\W_]+")
-    obj.["data"] <- regex.Replace(File.ReadAllText path, " ").ToLower().Split()
+    obj.["data"] <- 
+        regex.Replace(File.ReadAllText path, " ")
+             .ToLower()
+             .Split()
 
 let loadStopWords (obj : Map) =
     let stopWords = 
@@ -31,16 +34,39 @@ let incrementCount (obj : Map) word =
 
 let dataStorageObj = Map()
 dataStorageObj.["data"] <- [||]
-dataStorageObj.["init"] <- fun path -> extractWords dataStorageObj path
-dataStorageObj.["words"] <- fun () -> dataStorageObj.["data"]
+dataStorageObj.["init"] <- 
+    fun path -> extractWords dataStorageObj path
+dataStorageObj.["words"] <- 
+    fun () -> dataStorageObj.["data"]
 
 let stopWordsObj = Map()
 stopWordsObj.["stop_words"] <- Set.empty<string>
-stopWordsObj.["init"] <- fun () -> loadStopWords(stopWordsObj)
+stopWordsObj.["init"] <- 
+    fun () -> loadStopWords(stopWordsObj)
 stopWordsObj.["is_stop_word"] <- 
-    fun word -> (stopWordsObj.["stop_words"] :?> Set<string>).Contains word
+    fun word -> 
+        (stopWordsObj.["stop_words"] :?> Set<string>)
+            .Contains word
 
+type Freqs = Dictionary<string, int>
 let wordFreqsObj = Map()
-wordFreqsObj.["freqs"] <- Dictionary<string, int>()
-wordFreqsObj.["increment_count"] <- fun word -> incrementCount wordFreqsObj word
-wordFreqsObj.["sorted"] <- fun 
+wordFreqsObj.["freqs"] <- Freqs()
+wordFreqsObj.["increment_count"] <- 
+    fun word -> incrementCount wordFreqsObj word
+wordFreqsObj.["sorted"] <- 
+    fun () -> 
+        (wordFreqsObj.["freqs"] :?> Freqs)
+        |> Seq.map (fun (KeyValue(word, n)) -> word, n)
+        |> Seq.sortByDescending snd
+
+(dataStorageObj.["init"] :?> string -> unit) ``p & p``
+(stopWordsObj.["init"] :?> unit -> unit) ()
+
+for w in (dataStorageObj.["data"] :?> string[]) do
+    if (not << (stopWordsObj.["is_stop_word"] :?> string -> bool)) w
+    then (wordFreqsObj.["increment_count"] :?> string -> unit) w
+
+let wordFreqs = 
+    (wordFreqsObj.["sorted"] :?> unit -> seq<string * int>) ()
+for (w, c) in wordFreqs |> Seq.take 25 do
+    printfn "%s - %d" w c
