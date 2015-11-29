@@ -52,6 +52,7 @@
     <None Include="Style07.fsx" />
     <None Include="Style08.fsx" />
     <None Include="Style09.fsx" />
+    <None Include="Style09-v2.fsx" />
     <None Include="Style10.fsx" />
     <None Include="Style11.fsx" />
     <None Include="Style12.fsx" />
