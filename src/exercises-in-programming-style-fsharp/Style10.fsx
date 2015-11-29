@@ -12,7 +12,10 @@ let ``p & p`` =
 
 type DataStorageManager (filepath) =
     let regex = new Regex("[\W_]+")
-    let data  = regex.Replace(File.ReadAllText(filepath), " ").ToLower()
+    let data  = 
+        regex
+            .Replace(File.ReadAllText(filepath), " ")
+            .ToLower()
 
     member __.Words = data.Split()
     
@@ -20,10 +23,12 @@ type StopWordsManager () =
     let stopWords = 
         File.ReadAllText(``stop words``)
         |> (fun s -> s.Split(','))
-        |> Array.append ([|'a'..'z'|] |> Array.map string)
+        |> Array.append 
+            ([|'a'..'z'|] |> Array.map string)
         |> Set.ofArray
 
-    member __.IsStopWord word = stopWords.Contains word
+    member __.IsStopWord word = 
+        stopWords.Contains word
 
 type WordFrequencyManager () =
     let wordFreqs = Dictionary<string, int>()
@@ -45,11 +50,14 @@ type WordFrequencyController (filePath) =
 
     member __.Run () =
         dataStorageManager.Words
-        |> Array.filter (stopWordsManager.IsStopWord >> not)
-        |> Array.iter wordFreqsManager.IncrementCount
+        |> Array.filter 
+            (stopWordsManager.IsStopWord >> not)
+        |> Array.iter 
+            wordFreqsManager.IncrementCount
 
         wordFreqsManager.Sorted()
         |> Seq.take 25
-        |> Seq.iter (fun (word, n) -> printfn "%s - %d" word n)
+        |> Seq.iter (fun (word, n) -> 
+            printfn "%s - %d" word n)
 
 WordFrequencyController(``p & p``).Run()
