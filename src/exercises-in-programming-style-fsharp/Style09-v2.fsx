@@ -4,17 +4,26 @@ open System.Text.RegularExpressions
 
 #time
 
-// version 1 (with simple bind)
-
-type Result<'a> = Result of 'a
-
-// define the standard 'bind' operator
-let (>>=) (Result p) (cont : 'a -> Result<'b>) = cont p
+// version 2 (with Computation Expression)
 
 let ``stop words`` = 
     __SOURCE_DIRECTORY__ + "../stop_words.txt"
 let ``p & p`` = 
     __SOURCE_DIRECTORY__ + "../pride-and-prejudice.txt"
+
+type Result<'a> = Result of 'a
+
+[<Sealed>]
+type TheOneBuilder () =
+    member __.Bind (Result p, cont : 'a -> Result<'b>) = 
+        cont p
+
+    member __.Zero () = Result ()
+
+    member __.Return x = x
+    member __.ReturnFrom (Result x) = x
+
+let theOne = TheOneBuilder()
 
 let readFile path = 
     File.ReadAllText path |> Result
@@ -28,11 +37,13 @@ let normalize (input : string) =
 let scan (input : string) = 
     input.Split() |> Result
     
-let removeStopWords (words : string[]) =
-    let (Result raw) = readFile ``stop words``
-    
+let removeStopWords (words : string[]) = 
+    let raw = theOne {
+        return! readFile ``stop words``
+    }
+
     let stopWords = 
-        raw.Split ','
+        raw.Split(',')
         |> Array.append 
             ([| 'a'..'z' |] |> Array.map string)
         |> Set.ofArray
@@ -62,14 +73,15 @@ let top25Freqs (wordFreqs : (string * int)[]) =
 
 let printMe = printf "%s"
 
-let lift f = f >> Result
+let (>>=) (Result p) (cont : 'a -> Result<'b>) = cont p
 
-readFile ``p & p``
->>= filterChars
->>= normalize
->>= scan
->>= removeStopWords
->>= frequencies
->>= sort
->>= top25Freqs
->>= (lift printMe)
+theOne {
+    let! text = 
+        readFile ``p & p``
+        >>= filterChars
+        >>= normalize
+    let! words = scan text >>= removeStopWords
+    let! wordFreqs = frequencies words >>= sort
+    let! top25 = top25Freqs wordFreqs
+    do printMe top25
+}
