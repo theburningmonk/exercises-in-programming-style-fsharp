@@ -26,8 +26,9 @@ type DataStorageManager () =
     member __.Dispatch (message : string[]) : obj =
        match message with
        | [| "init"; filePath |] 
-           -> init filePath; null
-       | [| "words" |] -> words () :> obj
+           -> init filePath :> obj
+       | [| "words" |] 
+           -> words () :> obj
        | x -> raise <| MessageNotUnderstood x
 
 type StopWordsManager () =
@@ -45,7 +46,8 @@ type StopWordsManager () =
 
     member __.Dispatch (message : string[]) : obj =
         match message with
-        | [| "init" |] -> init (); null
+        | [| "init" |] 
+            -> init () :> obj
         | [| "is_stop_word"; word |] 
             -> isStopWord word :> obj
         | x -> raise <| MessageNotUnderstood x
@@ -56,7 +58,7 @@ type WordFrequencyManager () =
     let incrementCount word =
         match wordFreqs.TryGetValue word with
         | true, n -> wordFreqs.[word] <- n+1
-        | _ -> wordFreqs.[word] <- 1
+        | _       -> wordFreqs.[word] <- 1
 
     let sorted () =
         wordFreqs
@@ -67,7 +69,8 @@ type WordFrequencyManager () =
         match message with
         | [| "increment_count"; word |] 
             -> incrementCount word :> obj
-        | [| "sorted" |] -> sorted() :> obj
+        | [| "sorted" |] 
+            -> sorted() :> obj
         | x -> raise <| MessageNotUnderstood x
 
 type WordFrequencyController () =
@@ -110,8 +113,9 @@ type WordFrequencyController () =
     member __.Dispatch (message : string[]) : obj =
         match message with
         | [| "init"; filePath |] 
-            -> init filePath; null
-        | [| "run" |] -> run() :> obj
+            -> init filePath :> obj
+        | [| "run" |] 
+            -> run() :> obj
         | x -> raise <| MessageNotUnderstood x
 
 let controller = WordFrequencyController()
