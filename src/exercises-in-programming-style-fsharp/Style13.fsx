@@ -24,7 +24,7 @@ type IWordFrequencyController =
     abstract member Run : unit -> unit
 
 type DataStorageManager (filepath) =
-    let data  = 
+    let data = 
         Regex("[\W_]+")
             .Replace(File.ReadAllText(filepath), " ")
             .ToLower()
