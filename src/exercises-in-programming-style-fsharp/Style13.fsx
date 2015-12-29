@@ -19,6 +19,9 @@ type IStopWordsManager =
 type IWordFrequencyManager =
     abstract member IncrementCount : string -> unit
     abstract member Sorted : unit -> seq<string * int>
+    
+type IWordFrequencyController =
+    abstract member Run : unit -> unit
 
 type DataStorageManager (filepath) =
     let data  = 
@@ -61,13 +64,17 @@ type WordFrequencyController (filePath) =
     let wordFreqsManager : IWordFrequencyManager = 
         WordFrequencyManager() :> IWordFrequencyManager
 
-    member __.Run () =
-        dataStorageManager.Words
-        |> Array.filter (stopWordsManager.IsStopWord >> not)
-        |> Array.iter wordFreqsManager.IncrementCount
+    interface IWordFrequencyController with
+        member __.Run () =
+            dataStorageManager.Words
+            |> Array.filter (stopWordsManager.IsStopWord >> not)
+            |> Array.iter wordFreqsManager.IncrementCount
 
-        wordFreqsManager.Sorted()
-        |> Seq.take 25
-        |> Seq.iter (fun (word, n) -> printfn "%s - %d" word n)
+            wordFreqsManager.Sorted()
+            |> Seq.take 25
+            |> Seq.iter (fun (word, n) -> printfn "%s - %d" word n)
 
-WordFrequencyController(``p & p``).Run()
+let controller = 
+    WordFrequencyController(``p & p``) :> IWordFrequencyController
+    
+controller.Run()
