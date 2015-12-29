@@ -1,5 +1,4 @@
-﻿open System
-open System.Collections.Generic
+﻿open System.Collections.Generic
 open System.IO
 open System.Text.RegularExpressions
 
@@ -12,12 +11,21 @@ let ``p & p`` =
 
 type Map = Dictionary<string, obj>
 
+let dataStorageObj = Map()
+dataStorageObj.["data"] <- [||]
+
 let extractWords (obj : Map) path =
     let regex = Regex("[\W_]+")
     obj.["data"] <- 
         regex.Replace(File.ReadAllText path, " ")
              .ToLower()
              .Split()
+
+dataStorageObj.["init"]  <- (extractWords dataStorageObj)
+dataStorageObj.["words"] <- fun () -> dataStorageObj.["data"]
+
+let stopWordsObj = Map()
+stopWordsObj.["stop_words"] <- Set.empty<string>
 
 let loadStopWords (obj : Map) =
     let stopWords = 
@@ -26,23 +34,7 @@ let loadStopWords (obj : Map) =
         |> Set.ofArray
     obj.["stop_words"] <- stopWords
 
-let incrementCount (obj : Map) word =
-    let freqs = obj.["freqs"] :?> Dictionary<string, int>
-    match freqs.TryGetValue word with
-    | true, n -> freqs.[word] <- n+1
-    | _ -> freqs.[word] <- 1
-
-let dataStorageObj = Map()
-dataStorageObj.["data"] <- [||]
-dataStorageObj.["init"] <- 
-    fun path -> extractWords dataStorageObj path
-dataStorageObj.["words"] <- 
-    fun () -> dataStorageObj.["data"]
-
-let stopWordsObj = Map()
-stopWordsObj.["stop_words"] <- Set.empty<string>
-stopWordsObj.["init"] <- 
-    fun () -> loadStopWords(stopWordsObj)
+stopWordsObj.["init"] <- fun () -> loadStopWords stopWordsObj
 stopWordsObj.["is_stop_word"] <- 
     fun word -> 
         (stopWordsObj.["stop_words"] :?> Set<string>)
@@ -51,8 +43,14 @@ stopWordsObj.["is_stop_word"] <-
 type Freqs = Dictionary<string, int>
 let wordFreqsObj = Map()
 wordFreqsObj.["freqs"] <- Freqs()
-wordFreqsObj.["increment_count"] <- 
-    fun word -> incrementCount wordFreqsObj word
+
+let incrementCount (obj : Map) word =
+    let freqs = obj.["freqs"] :?> Dictionary<string, int>
+    match freqs.TryGetValue word with
+    | true, n -> freqs.[word] <- n+1
+    | _ -> freqs.[word] <- 1
+
+wordFreqsObj.["increment_count"] <- incrementCount wordFreqsObj
 wordFreqsObj.["sorted"] <- 
     fun () -> 
         (wordFreqsObj.["freqs"] :?> Freqs)
