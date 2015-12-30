@@ -62,8 +62,8 @@ type WordFrequencyCounter (src : IObservable<string[]>) =
             | _       -> wordFreqs.[w] <- 1)
 
         wordFreqs
-            |> Seq.map (fun (KeyValue(word, n)) -> word, n)
-            |> Seq.sortByDescending snd
+        |> Seq.map (fun (KeyValue(word, n)) -> word, n)
+        |> Seq.sortByDescending snd
 
     do src
        |> Observable.subscribe (fun words ->
