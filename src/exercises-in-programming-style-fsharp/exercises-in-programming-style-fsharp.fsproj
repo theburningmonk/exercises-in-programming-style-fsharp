@@ -62,6 +62,7 @@
     <None Include="Style15.fsx" />
     <None Include="Style16.fsx" />
     <None Include="Style17.fsx" />
+    <None Include="Style18.fsx" />
     <None Include="paket.references" />
   </ItemGroup>
   <PropertyGroup>
