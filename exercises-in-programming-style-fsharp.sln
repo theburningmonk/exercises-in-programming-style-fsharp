@@ -17,6 +17,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "project", "project", "{BF60
 		RELEASE_NOTES.md = RELEASE_NOTES.md
 	EndProjectSection
 EndProject
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "Style19Plugins", "src\Style19Plugins\Style19Plugins.fsproj", "{129BA557-5F3D-4DE8-94B3-6FA207AB0F42}"
+EndProject
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "Style19Main", "src\Style19Main\Style19Main.fsproj", "{2296B3A7-68F1-4BEF-AB31-3BD5E00AF437}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +31,14 @@ Global
 		{FA3B919C-C792-4AF2-A62A-3BD8A8D8D7A3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FA3B919C-C792-4AF2-A62A-3BD8A8D8D7A3}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FA3B919C-C792-4AF2-A62A-3BD8A8D8D7A3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{129BA557-5F3D-4DE8-94B3-6FA207AB0F42}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{129BA557-5F3D-4DE8-94B3-6FA207AB0F42}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{129BA557-5F3D-4DE8-94B3-6FA207AB0F42}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{129BA557-5F3D-4DE8-94B3-6FA207AB0F42}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2296B3A7-68F1-4BEF-AB31-3BD5E00AF437}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2296B3A7-68F1-4BEF-AB31-3BD5E00AF437}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2296B3A7-68F1-4BEF-AB31-3BD5E00AF437}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2296B3A7-68F1-4BEF-AB31-3BD5E00AF437}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

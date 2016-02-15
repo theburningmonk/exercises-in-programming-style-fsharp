@@ -17,54 +17,25 @@
     <DebugSymbols>true</DebugSymbols>
     <Optimize>false</Optimize>
     <Tailcalls>false</Tailcalls>
-    <OutputPath>bin\Debug</OutputPath>
+    <OutputPath>bin\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <WarningLevel>3</WarningLevel>
-    <DocumentationFile>.\bin\Debug\exercises-in-programming-style-fsharp.xml</DocumentationFile>
+    <DocumentationFile>
+    </DocumentationFile>
     <OtherFlags>--warnon:1182</OtherFlags>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <Tailcalls>true</Tailcalls>
-    <OutputPath>bin\Release</OutputPath>
+    <OutputPath>bin\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <WarningLevel>3</WarningLevel>
-    <DocumentationFile>.\bin\Release\exercises-in-programming-style-fsharp.xml</DocumentationFile>
+    <DocumentationFile>
+    </DocumentationFile>
     <OtherFlags>--warnon:1182</OtherFlags>
     <DebugSymbols>true</DebugSymbols>
   </PropertyGroup>
-  <ItemGroup>
-    <Reference Include="mscorlib" />
-    <Reference Include="System" />
-    <Reference Include="System.Core" />
-    <Reference Include="System.Numerics" />
-    <Reference Include="FSharp.Core" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Style01.fsx" />
-    <None Include="Style02.fsx" />
-    <None Include="Style03.fsx" />
-    <None Include="Style04.fsx" />
-    <None Include="Style05.fsx" />
-    <None Include="Style05-v2.fsx" />
-    <None Include="Style06.fsx" />
-    <None Include="Style07.fsx" />
-    <None Include="Style08.fsx" />
-    <None Include="Style09.fsx" />
-    <None Include="Style09-v2.fsx" />
-    <None Include="Style10.fsx" />
-    <None Include="Style11.fsx" />
-    <None Include="Style11-v2.fsx" />
-    <None Include="Style12.fsx" />
-    <None Include="Style13.fsx" />
-    <None Include="Style14.fsx" />
-    <None Include="Style15.fsx" />
-    <None Include="Style16.fsx" />
-    <None Include="Style17.fsx" />
-    <None Include="Style18.fsx" />
-    <None Include="paket.references" />
-  </ItemGroup>
   <PropertyGroup>
     <MinimumVisualStudioVersion Condition="'$(MinimumVisualStudioVersion)' == ''">11</MinimumVisualStudioVersion>
   </PropertyGroup>
@@ -109,4 +80,36 @@
       </ItemGroup>
     </When>
   </Choose>
+  <ItemGroup>
+    <None Include="Style01.fsx" />
+    <None Include="Style02.fsx" />
+    <None Include="Style03.fsx" />
+    <None Include="Style04.fsx" />
+    <None Include="Style05.fsx" />
+    <None Include="Style05-v2.fsx" />
+    <None Include="Style06.fsx" />
+    <None Include="Style07.fsx" />
+    <None Include="Style08.fsx" />
+    <None Include="Style09.fsx" />
+    <None Include="Style09-v2.fsx" />
+    <None Include="Style10.fsx" />
+    <None Include="Style11.fsx" />
+    <None Include="Style11-v2.fsx" />
+    <None Include="Style12.fsx" />
+    <None Include="Style13.fsx" />
+    <None Include="Style14.fsx" />
+    <None Include="Style15.fsx" />
+    <None Include="Style16.fsx" />
+    <None Include="Style17.fsx" />
+    <None Include="Style18.fsx" />
+    <None Include="Style19.fsx" />
+    <None Include="paket.references" />
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="mscorlib" />
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Numerics" />
+    <Reference Include="FSharp.Core" />
+  </ItemGroup>
 </Project>
