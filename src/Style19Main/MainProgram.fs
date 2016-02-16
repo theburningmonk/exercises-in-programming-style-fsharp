@@ -19,13 +19,14 @@ type Config =
 
 let private loadPlugins { PluginsDir = dir } =
     let baseType = typeof<IPlugin>
-    let assemblyFiles = Directory.GetFiles(dir, "*.dll")
-    let assemblies = assemblyFiles |> Array.map Assembly.LoadFrom
-    assemblies
+
+    Directory.GetFiles(dir, "*.dll")
+    |> Array.map Assembly.LoadFrom
     |> Array.collect (fun a ->
         a.GetExportedTypes()
         |> Array.filter (fun t ->
-            not t.IsAbstract && baseType.IsAssignableFrom t)
+            not t.IsAbstract && 
+            baseType.IsAssignableFrom t)
         |> Array.map (fun t -> 
             let ctor = t.GetConstructor([||])
             let plugin = ctor.Invoke([||]) :?> IPlugin
