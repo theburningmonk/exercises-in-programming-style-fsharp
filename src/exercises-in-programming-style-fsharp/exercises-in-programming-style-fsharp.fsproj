@@ -103,6 +103,7 @@
     <None Include="Style17.fsx" />
     <None Include="Style18.fsx" />
     <None Include="Style19.fsx" />
+    <None Include="Style20.fsx" />
     <None Include="paket.references" />
   </ItemGroup>
   <ItemGroup>
