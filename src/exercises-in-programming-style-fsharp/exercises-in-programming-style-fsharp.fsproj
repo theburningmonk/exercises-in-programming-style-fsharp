@@ -20,8 +20,6 @@
     <OutputPath>bin\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <WarningLevel>3</WarningLevel>
-    <DocumentationFile>
-    </DocumentationFile>
     <OtherFlags>--warnon:1182</OtherFlags>
     <PlatformTarget>x86</PlatformTarget>
   </PropertyGroup>
@@ -32,8 +30,6 @@
     <OutputPath>bin\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <WarningLevel>3</WarningLevel>
-    <DocumentationFile>
-    </DocumentationFile>
     <OtherFlags>--warnon:1182</OtherFlags>
     <DebugSymbols>true</DebugSymbols>
   </PropertyGroup>
@@ -94,6 +90,8 @@
     <None Include="Style27.fsx" />
     <None Include="Style28.fsx" />
     <None Include="Style29.fsx" />
+    <None Include="Style30.fsx" />
+    <None Include="Style31.fsx" />
     <None Include="paket.references" />
   </ItemGroup>
   <ItemGroup>
