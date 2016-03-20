@@ -15,7 +15,7 @@ let partition chunkSize (data : string) =
     |> Array.map (fun lines -> 
         System.String.Join("\n", lines))
 
- let splitWords (data : string) =
+let splitWords (data : string) =
     let stopWords = 
         File.ReadAllText(``stop words``).Split ','
         |> Set.ofArray
@@ -32,31 +32,31 @@ let partition chunkSize (data : string) =
     |> Seq.map (fun w -> w, 1)
     |> Seq.toArray
 
- let countWords lf rt =
-     let dict = Dictionary<string, int>()
+let countWords lf rt =
+    let dict = Dictionary<string, int>()
     
-     seq {
-         yield! lf
-         yield! rt 
-     }
-     |> Seq.iter (fun (w, n') ->
-        match dict.TryGetValue w with
-        | true, n -> dict.[w] <- n + n'
-        | _       -> dict.[w] <- n')
+    seq {
+        yield! lf
+        yield! rt 
+    }
+    |> Seq.iter (fun (w, n') ->
+       match dict.TryGetValue w with
+       | true, n -> dict.[w] <- n + n'
+       | _       -> dict.[w] <- n')
+    
+    dict
+    |> Seq.map (fun (KeyValue(k, v)) -> k, v)
+    |> Seq.toArray
 
-     dict
-     |> Seq.map (fun (KeyValue(k, v)) -> k, v)
-     |> Seq.toArray
-
- let sort wordFreqs = 
+let sort wordFreqs = 
     wordFreqs
     |> Array.sortByDescending snd
 
- File.ReadAllText ``p & p``
- |> partition 200
- |> Array.map splitWords
- |> Array.reduce countWords
- |> sort
- |> Seq.take 25
- |> Seq.iter (fun (word, n) ->
-     printfn "%s - %d" word n)
+File.ReadAllText ``p & p``
+|> partition 200
+|> Array.map splitWords
+|> Array.reduce countWords
+|> sort
+|> Seq.take 25
+|> Seq.iter (fun (word, n) ->
+    printfn "%s - %d" word n)

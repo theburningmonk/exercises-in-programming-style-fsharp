@@ -15,7 +15,7 @@ let partition chunkSize (data : string) =
     |> Array.map (fun lines -> 
         System.String.Join("\n", lines))
 
- let splitWords (data : string) =
+let splitWords (data : string) =
     let stopWords = 
         File.ReadAllText(``stop words``).Split ','
         |> Set.ofArray
@@ -32,7 +32,7 @@ let partition chunkSize (data : string) =
     |> Seq.map (fun w -> w, 1)
     |> Seq.toArray
 
- let regroup (pairsList : (string*int)[][]) =
+let regroup (pairsList : (string*int)[][]) =
     pairsList
     |> Seq.collect id
     |> Seq.groupBy fst
@@ -45,16 +45,16 @@ let countWords (mapping : Map<string, (string*int)[]>) =
         k, v |> Seq.sumBy snd)
     |> Seq.toArray
 
- let sort wordFreqs = 
+let sort wordFreqs = 
     wordFreqs
     |> Array.sortByDescending snd
 
- File.ReadAllText ``p & p``
- |> partition 200
- |> Array.map splitWords
- |> regroup
- |> countWords
- |> sort
- |> Seq.take 25
- |> Seq.iter (fun (word, n) ->
-     printfn "%s - %d" word n)
+File.ReadAllText ``p & p``
+|> partition 200
+|> Array.map splitWords
+|> regroup
+|> countWords
+|> sort
+|> Seq.take 25
+|> Seq.iter (fun (word, n) ->
+    printfn "%s - %d" word n)

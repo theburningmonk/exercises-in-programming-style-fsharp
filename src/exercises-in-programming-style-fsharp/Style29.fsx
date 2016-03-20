@@ -18,7 +18,7 @@ let stopWords =
     File.ReadAllText(``stop words``).Split(',')
     |> Set.ofArray
 
- let processWords () = 
+let processWords () = 
     let wordFreqs = Dictionary<string, int>()
 
     let rec loop () =
@@ -69,7 +69,7 @@ let wordFreqs =
     |> Seq.sortByDescending snd
     |> Seq.toArray
 
- wordFreqs
- |> Seq.take 25
- |> Seq.iter (fun (word, n) ->
+wordFreqs
+|> Seq.take 25
+|> Seq.iter (fun (word, n) ->
     printfn "%s - %d" word n)
