@@ -7,8 +7,9 @@ open System.Text.RegularExpressions
 let ``stop words`` = __SOURCE_DIRECTORY__ + "../stop_words.txt"
 let ``p & p`` = __SOURCE_DIRECTORY__ + "../pride-and-prejudice.txt"
 
-type ColumnRef = string
-type Formula = ColumnRef[] * (string[][] -> string[])
+type ColumnRef  = string
+type ColumnData = string[]
+type Formula = ColumnRef[] * (ColumnData[] -> ColumnData)
 type DisplayValue = string[]
 
 type Column = 
@@ -104,6 +105,7 @@ spreadsheet.["A"] <-
     |> Seq.map (fun m -> m.Value)
     |> Seq.toArray
     |> value
+
 spreadsheet.["B"] <- 
     value <| File.ReadAllText(``stop words``).Split(',')
 
