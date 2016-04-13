@@ -90,8 +90,9 @@
     <None Include="Style27.fsx" />
     <None Include="Style28.fsx" />
     <None Include="Style29.fsx" />
-    <None Include="Style29-2.fsx" />
+    <None Include="Style29-v2.fsx" />
     <None Include="Style30.fsx" />
+    <None Include="Style30-v2.fsx" />
     <None Include="Style31.fsx" />
     <None Include="Style32.fsx" />
     <None Include="Style32-v2.fsx" />

@@ -1,4 +1,4 @@
-﻿open System.Collections.Generic
+open System.Collections.Generic
 open System.IO
 open System.Text.RegularExpressions
 
@@ -15,7 +15,7 @@ let partition chunkSize (data : string) =
     |> Array.map (fun lines -> 
         System.String.Join("\n", lines))
 
-let splitWords (data : string) =
+let splitWords (data : string) = async {
     let stopWords = 
         File.ReadAllText(``stop words``).Split ','
         |> Set.ofArray
@@ -27,10 +27,14 @@ let splitWords (data : string) =
         |> Seq.cast<Match>
         |> Seq.map (fun m -> m.Value)
 
-    words 
-    |> Seq.filter (not << stopWords.Contains)
-    |> Seq.map (fun w -> w, 1)
-    |> Seq.toArray
+    let result = 
+        words 
+        |> Seq.filter (not << stopWords.Contains)
+        |> Seq.groupBy id
+        |> Seq.map (fun (w, ws) -> w, Seq.length ws)
+        |> Seq.toArray
+    return result
+}
 
 let countWords lf rt =
     let dict = Dictionary<string, int>()
@@ -48,20 +52,22 @@ let countWords lf rt =
     |> Seq.map (fun (KeyValue(k, v)) -> k, v)
     |> Seq.toArray
 
-let countWordsV2 lf rt =
-  Array.concat [ lf; rt ]
-  |> Array.groupBy fst
-  |> Array.map (fun (word, coll) -> word, Array.sumBy snd coll)
-
 let sort wordFreqs = 
     wordFreqs
     |> Array.sortByDescending snd
 
-File.ReadAllText ``p & p``
-|> partition 200
-|> Array.map splitWords
-|> Array.reduce countWordsV2
-|> sort
-|> Seq.take 25
-|> Seq.iter (fun (word, n) ->
-    printfn "%s - %d" word n)
+async {
+    let! results =
+        File.ReadAllText ``p & p``
+        |> partition 200
+        |> Array.map splitWords
+        |> Async.Parallel
+    
+    results
+    |> Array.reduce countWords
+    |> sort
+    |> Seq.take 25
+    |> Seq.iter (fun (word, n) ->
+        printfn "%s - %d" word n)
+}
+|> Async.Start
